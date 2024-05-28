@@ -56,6 +56,12 @@ const userSchema = new mongoose.Schema({
   age: {
     type: Number,
   },
+  voterId: {
+    type: String,
+    required: function () {
+      return this.role === 'voter' || this.role === 'politician' || this.role === 'electoral_head';
+    },
+  },
   criminalRecords: [
     {
       status: {
