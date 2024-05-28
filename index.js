@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/authRoutes');
 const verifyRoles = require("./routes/verifyRoles");
 const { errorHandler } = require('./middlewares/errorMiddleware');
+const ballotRoutes = require('./routes/ballotRoutes');
 
 // Load environment variables
 require('dotenv').config();
@@ -39,6 +40,7 @@ if (process.env.NODE_ENV === 'production') {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api', verifyRoles);
+app.use('/api/ballots', ballotRoutes);
 
 // Error handler middleware
 app.use(errorHandler);
