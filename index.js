@@ -11,6 +11,8 @@ const authRoutes = require('./routes/authRoutes');
 const verifyRoles = require("./routes/verifyRoles");
 const { errorHandler } = require('./middlewares/errorMiddleware');
 const ballotRoutes = require('./routes/ballotRoutes');
+const voteRoutes = require('./routes/voteRoutes');
+const resultRoutes = require('./routes/resultRoutes');
 
 // Load environment variables
 require('dotenv').config();
@@ -26,7 +28,14 @@ app.use(express.json());
 app.use(helmet());
 app.use(morgan('common'));
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
-app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 })); // 15 minutes, 100 requests
+app.use(rateLimit({
+    windowMs: 15 * 60 * 1000, 
+    max: 100, 
+    message: {
+        success: false,
+        message: 'Too many requests, please try again later.'
+    }
+})); // 15 minutes, 100 requests
 app.use(xss());
 app.use(mongoSanitize());
 app.use(bodyParser.json());
@@ -41,6 +50,8 @@ if (process.env.NODE_ENV === 'production') {
 app.use('/api/auth', authRoutes);
 app.use('/api', verifyRoles);
 app.use('/api/ballots', ballotRoutes);
+app.use('/api/votes', voteRoutes);
+app.use('/api', resultRoutes);
 
 // Error handler middleware
 app.use(errorHandler);
